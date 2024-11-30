@@ -66,7 +66,27 @@ Essa-NPZ is a secure, decentralized messaging application built on the NPZ (Netw
 
 ---
 
-### **4. No Server-Side Storage**
+### **4. Group Chats**
+
+- **Multiple Recipients**:
+  - **Group chats consist of a list of multiple recipients**.
+  - **The more recipients, the more datagrams are sent**, each encrypted with a different public key.
+
+- **Message Transmission**:
+  - The sender's client sends separate encrypted datagrams for each group member.
+  - Each datagram is encrypted with the individual recipient's public key.
+
+- **Merging on the Client Side**:
+  - **Messages are merged on the client's side after routing**.
+  - The recipient's client reconstructs the group conversation from received messages.
+
+- **Group Name Header**:
+  - An **additional header with the group name is included in the encrypted datagram**.
+  - This allows the recipient's client to identify and organize messages within the correct group chat.
+
+---
+
+### **5. No Server-Side Storage**
 
 - **Routing Only**:
   - Servers act purely as intermediaries, forwarding encrypted messages and files.
@@ -78,7 +98,7 @@ Essa-NPZ is a secure, decentralized messaging application built on the NPZ (Netw
 
 ---
 
-### **5. Public Key Distribution and Verification**
+### **6. Public Key Distribution and Verification**
 
 - **Distributed Public Key Directory**:
   - Public keys are associated with NPZ addresses and made available in a decentralized directory.
@@ -113,7 +133,31 @@ Essa-NPZ is a secure, decentralized messaging application built on the NPZ (Netw
 
 ---
 
-### **2. Changing Public/Private Keys**
+### **2. Group Chats**
+
+1. **Preparing the Message**:
+   - The sender composes a message intended for a group chat.
+   - Retrieves the public keys of all group members from the public key directory.
+
+2. **Encrypting and Sending**:
+   - **For each recipient**, the sender's client:
+     - Encrypts the message with the recipient's public key.
+     - Includes an **additional header with the group name** in the encrypted datagram.
+     - Sends the encrypted datagram to the recipient's NPZ address.
+
+3. **Routing**:
+   - Each datagram is routed individually to its recipient.
+   - **Servers act as routers**, forwarding the datagrams without storing them.
+
+4. **Receiving and Merging**:
+   - Each recipient's client receives the encrypted datagram.
+   - Decrypts the message using their private key.
+   - **Uses the group name header to place the message in the correct group chat**.
+   - **Merging happens on the client side after routing**, reconstructing the group conversation.
+
+---
+
+### **3. Changing Public/Private Keys**
 
 - Users can update their public/private key pairs as needed.
 - **Effect of Key Changes**:
@@ -140,10 +184,6 @@ Essa-NPZ is a secure, decentralized messaging application built on the NPZ (Netw
   - **Routing uses modified network protocols**, adapted to support NPZ's architecture.
   - These protocols improve routing efficiency and security.
 
-- **Uniqueness of Data**:
-  - **The combination of the NPZ address and public key ensures data is uniquely identified**.
-  - Prevents unauthorized access even if messages reach unintended recipients.
-
 ---
 
 ### **2. Encryption Workflow**
@@ -153,9 +193,13 @@ Essa-NPZ is a secure, decentralized messaging application built on the NPZ (Netw
 
 2. **Encrypt Data**:
    - Messages are encrypted with the recipient's public key.
-   - **Uniqueness is ensured by using both the recipient's NPZ address and public key**.
+   - For group chats, separate encryption is performed for each recipient.
 
-3. **Decrypt Data**:
+3. **Group Name Header**:
+   - An additional header containing the group name is included in the encrypted datagram.
+   - Ensures that recipients can correctly associate messages with group chats.
+
+4. **Decrypt Data**:
    - The recipient decrypts messages with their private key.
    - **Only the holder of the correct private key can decrypt the message, maintaining confidentiality**.
 
@@ -179,6 +223,10 @@ Essa-NPZ is a secure, decentralized messaging application built on the NPZ (Netw
   - NPZ's hierarchical addressing and client-to-client datagram transmission optimize routing.
   - **Modified network protocols improve routing performance and security**.
 
+- **Scalable Group Chats**:
+  - **Group chats are implemented by sending multiple encrypted datagrams**, one for each recipient.
+  - **Merging on the client side** ensures messages are organized correctly without burdening the network.
+
 ---
 
 ## **Getting Started**
@@ -192,14 +240,15 @@ Essa-NPZ is a secure, decentralized messaging application built on the NPZ (Netw
 
 3. **Start Messaging**:
    - Send encrypted messages and files to other users using their NPZ addresses.
-   - **Rest assured that your communications are uniquely identified and secure**.
+   - **Create group chats by selecting multiple recipients**.
 
 ---
 
 ## **Future Plans**
 
-- **Group Messaging**:
-  - Add support for encrypted group chats.
+- **Optimized Group Chat Protocols**:
+  - Explore methods to reduce the number of datagrams sent in group chats.
+  - Implement broadcast or multicast features within NPZ where feasible.
 
 - **File Sharing Enhancements**:
   - Optimize large file transfers.
